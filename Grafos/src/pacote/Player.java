@@ -10,8 +10,7 @@ import java.util.Random;
 public class Player {
     private No posicao;         //onde a cobrinha esta
     private List<No> memoria;   //guarda todo o caminho percorrido
-    
-    private Map<No, List<Integer>> memoriaTentativas = new HashMap<>();
+    private Map<No, List<Integer>> memoriaTentativas = new HashMap<>();     //vai criar a lista de alternativas disponiveis para cada posicao visitada na matrix
     private Random ran = new Random();
 
     public Player(No posicao){
@@ -42,8 +41,9 @@ public class Player {
     }
     
     public boolean voltar(){
-        if(getUltimoPasso() > 0 && getUltimaMemoria() != posicao){
+        if(memoria.size() > 0){
             memoriaTentativas.remove(posicao);
+            memoria.remove(getUltimoPasso());
             posicao = getUltimaMemoria();
             return true;
         }
@@ -56,7 +56,7 @@ public class Player {
         
         if(linha > 0){
             No proximoPasso = tabuleiro[linha-1][coluna];   //guarda o proximo passo para cima
-            if(!proximoPasso.isParede() && !memoria.contains(proximoPasso)){    //se esse caminho nao e uma parede e ainda nao foi percorrido
+            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso)){    //se esse caminho nao e uma parede e ainda nao foi percorrido
                 posicao = proximoPasso;     //atualiza a posicao atual
                 atualizarMemoriaGeral(proximoPasso);  //adiciona o novo passo na memoria
                 return true;    //retorna que a cobra andou
@@ -71,7 +71,7 @@ public class Player {
         
         if(linha < tabuleiro.length - 1){
             No proximoPasso = tabuleiro[linha+1][coluna];
-            if(!proximoPasso.isParede() && !memoria.contains(proximoPasso)){
+            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso)){
                 posicao = proximoPasso;
                 atualizarMemoriaGeral(proximoPasso);
                 return true;    //retorna que a cobra andou
@@ -86,7 +86,7 @@ public class Player {
         
         if(coluna > 0){
             No proximoPasso = tabuleiro[linha][coluna-1];
-            if(!proximoPasso.isParede() && !memoria.contains(proximoPasso)){
+            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso)){
                 posicao = proximoPasso;
                 atualizarMemoriaGeral(proximoPasso);
                 return true;    //retorna que a cobra andou
@@ -101,7 +101,7 @@ public class Player {
         
         if(coluna < tabuleiro[0].length-1){
             No proximoPasso = tabuleiro[linha][coluna+1];
-            if(!proximoPasso.isParede() && !memoria.contains(proximoPasso)){
+            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso)){
                 posicao = proximoPasso;
                 atualizarMemoriaGeral(proximoPasso);
                 return true;    //retorna que a cobra andou

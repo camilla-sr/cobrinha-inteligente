@@ -25,48 +25,79 @@ public class Grafo {        //esse e o nosso labirinto
         
         this.inicio = tabuleiro[0][0];
         this.fim = tabuleiro[tamanho-1][tamanho-1];
-        conecarNos(tamanho);
+        conecarParedes(tamanho);
     }
     
-    public void conecarNos(int tamanho){
+    public void conecarParedes(int tamanho){
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 No noAtual = tabuleiro[i][j];
-                if(!noAtual.isParede()) continue;      //ignorar as paredes que serao os 1
+                if(noAtual.isCaminho()) continue;      //ignorar os caminhos validos que serao os 0, E, C
                 
                 if(i > 0){      //isso evita estouro da matriz
                     No noCima = tabuleiro[i-1][j];      //armazeno o tal no em variavel semantica
                     //SE o no de cima ao atual nao for uma parede
-                    if(noCima.isParede()) noAtual.addVizinho(noCima); //crio uma aresta entre eles
+                    if(noCima.isParede()) noAtual.addParede(noCima); //crio uma aresta entre eles
                 }
                 if(i < tamanho-1){
                     No noBaixo = tabuleiro[i+1][j];
-                    if(noBaixo.isParede()) noAtual.addVizinho(noBaixo);
+                    if(noBaixo.isParede()) noAtual.addParede(noBaixo);
                 }
                 if(j > 0){
                     No noEsquerda = tabuleiro[i][j-1];
-                    if(noEsquerda.isParede()) noAtual.addVizinho(noEsquerda);
+                    if(noEsquerda.isParede()) noAtual.addParede(noEsquerda);
                 }
                 if(j < tamanho-1){
                     No noDireita = tabuleiro[i][j+1];
-                    if(noDireita.isParede()) noAtual.addVizinho(noDireita);
+                    if(noDireita.isParede()) noAtual.addParede(noDireita);
+                }
+            }
+        }
+    }
+    public void conecarCaminhos(int tamanho){
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                No noAtual = tabuleiro[i][j];
+                if(noAtual.isParede()) continue;      //ignorar as paredes que serao os 1
+                
+                if(i > 0){      //isso evita estouro da matriz
+                    No noCima = tabuleiro[i-1][j];      //armazeno o tal no em variavel semantica
+                    //SE o no de cima ao atual nao for uma parede
+                    if(noCima.isCaminho()) noAtual.addCaminho(noCima); //crio uma aresta entre eles
+                }
+                if(i < tamanho-1){
+                    No noBaixo = tabuleiro[i+1][j];
+                    if(noBaixo.isCaminho()) noAtual.addCaminho(noBaixo);
+                }
+                if(j > 0){
+                    No noEsquerda = tabuleiro[i][j-1];
+                    if(noEsquerda.isCaminho()) noAtual.addCaminho(noEsquerda);
+                }
+                if(j < tamanho-1){
+                    No noDireita = tabuleiro[i][j+1];
+                    if(noDireita.isCaminho()) noAtual.addCaminho(noDireita);
                 }
             }
         }
     }
 
-    public void diagrama(){         //esse metodo vai tentar criar um diagrama com as ligacoes
+    public void diagrama(Player cobrinha){         //esse metodo vai tentar criar um diagrama com as ligacoes
         System.out.println("===============================================");
         for (int i = 0; i < tabuleiro.length; i++) {
             //aqui vao ter as ligacoes horizontais
             for (int j = 0; j < tabuleiro[i].length; j++) {
                 No v = tabuleiro[i][j];
-                System.out.print(v.getValor());     //isso vai trazer o valor que esta no no
+                
+                if (cobrinha.getPosicao() == v) {
+                    System.out.print("##");
+                }else{
+                    System.out.print(v.getValor());     //isso vai trazer o valor que esta no no
+                }
                 
                 if(j < tabuleiro[i].length - 1){    //verifica se tem um vizinho a direita
                     No vDireita = tabuleiro[i][j+1];
                     
-                    if(v.getVizinhos().contains(vDireita)){
+                    if(v.getParede().contains(vDireita)){
                         System.out.print("----");
                     }else{
                         System.out.print("    ");
@@ -82,7 +113,7 @@ public class Grafo {        //esse e o nosso labirinto
                 if(i < tabuleiro.length - 1){
                     No vBaixo = tabuleiro[i+1][j];
                     
-                    if(v.getVizinhos().contains(vBaixo)){
+                    if(v.getParede().contains(vBaixo)){
                         System.out.print("|    ");
                     }else{
                         System.out.print("     ");

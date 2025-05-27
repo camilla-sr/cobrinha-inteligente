@@ -6,18 +6,24 @@ import java.util.List;
 public class No {       //classe para gerenciar as `casas` do tabuleiro
     private int linha, coluna;
     private char valor;
-    private List<No> vizinhos;
+    private List<No> caminhos;
+    private List<No> paredes;
     
     public No(int linha, int coluna, char valor) {
         this.linha = linha;
         this.coluna = coluna;
         this.valor = valor;
-        this.vizinhos  = new ArrayList<>();
+        this.caminhos  = new ArrayList<>();
+        this.paredes  = new ArrayList<>();
     }
     
-    public void addVizinho(No vizinho) { vizinhos.add(vizinho); }   //adiciona nos proximos na lista
-    public List<No> getVizinhos() { return vizinhos; }      //retorna todos os nos proximos
+    public void addParede(No parede) { paredes.add(parede); }   //adiciona nos proximos na lista
+    public List<No> getParede() { return paredes; }      //retorna todos os nos proximos
     public boolean isParede() { return this.valor == '1'; }      //retorna se a aresta existe
+    
+    public void addCaminho(No caminho) { caminhos.add(caminho); }
+    public List<No> getCaminho() { return caminhos; }
+    public boolean isCaminho() { return this.valor == '0' || this.valor ==  'E' || this.valor == 'C'; }
     
     public int getLinha() { return linha; }
     public void setLinha(int linha) { this.linha = linha; }
