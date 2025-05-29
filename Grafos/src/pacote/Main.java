@@ -3,10 +3,12 @@ package pacote;
 public class Main {
     public static void main(String[] args) throws InterruptedException{
         boolean escapou = false;
+        int grafosGerados = 0;
 
         while (!escapou) {
-            System.out.println("\n\t\t\t\t\t\t\t\t\tGerando novo tabuleiro");
+            System.out.print("\tGerando novo tabuleiro\n");
             Grafo labirinto = new Grafo(10);
+            grafosGerados++;
             Player cobrinha = new Player(labirinto.getInicio());
             No fim = labirinto.getFim();
             
@@ -16,6 +18,7 @@ public class Main {
 
             while (!cobrinha.getPosicao().equals(fim)) {
                 Thread.sleep(400);
+                System.out.printf("\t\t\t\t\t\t\t\t\tTabuleiros gerados: %d\n", grafosGerados);
 
                 if (!cobrinha.andar(labirinto.getTabuleiro())) {
                     if (!cobrinha.voltar()) {
@@ -27,10 +30,6 @@ public class Main {
 
             if (cobrinha.getPosicao().equals(fim)) {
                 System.out.println("\n\t\t\t\t\t\t\t\t\tEscapou!");
-                System.out.println("Caminho percorrido:");
-                for (No passo : cobrinha.getMemoria()) {
-                    System.out.println("(" + passo.getLinha() + ", " + passo.getColuna() + ")");
-                }
                 escapou = true;
             }
         }

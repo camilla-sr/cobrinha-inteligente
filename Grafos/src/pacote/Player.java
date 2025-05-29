@@ -44,8 +44,7 @@ public class Player {
     }
     
     public boolean voltar(){
-        if(!semSaida.contains(posicao)){
-            memoriaTentativas.remove(posicao);
+        if(memoria.size() > 0 && !semSaida.contains(posicao)){
             memoria.remove(getUltimoPasso());
             posicao = getUltimaMemoria();
             return true;
