@@ -89,7 +89,7 @@ public class Grafo {        //esse e o nosso labirinto
                 No v = tabuleiro[i][j];
                 
                 if (cobrinha.getPosicao() == v) {
-                    System.out.print("##");
+                    System.out.print("<><>");
                 }else{
                     System.out.print(v.getValor());     //isso vai trazer o valor que esta no no
                 }

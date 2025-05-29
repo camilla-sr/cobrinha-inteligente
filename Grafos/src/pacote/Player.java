@@ -11,11 +11,13 @@ public class Player {
     private No posicao;         //onde a cobrinha esta
     private List<No> memoria;   //guarda todo o caminho percorrido
     private Map<No, List<Integer>> memoriaTentativas = new HashMap<>();     //vai criar a lista de alternativas disponiveis para cada posicao visitada na matrix
+    private List<No> semSaida;
     private Random ran = new Random();
 
     public Player(No posicao){
         this.posicao = posicao;
         this.memoria = new ArrayList<>();
+        this.semSaida = new ArrayList<>();
         atualizarMemoriaGeral(posicao);      //inclui a posicao inicial na memoria
     }
     
@@ -37,11 +39,12 @@ public class Player {
                 direcao = proximaTentativa(posicao);
             }
         }
+        atualizaBecos(this.posicao);
         return false;
     }
     
     public boolean voltar(){
-        if(memoria.size() > 0){
+        if(!semSaida.contains(posicao)){
             memoriaTentativas.remove(posicao);
             memoria.remove(getUltimoPasso());
             posicao = getUltimaMemoria();
@@ -129,7 +132,8 @@ public class Player {
     private void atualizarMemoriaGeral(No posicaoNova){ memoria.add(posicaoNova); }
     private int getUltimoPasso() { return memoria.size() - 1; }
     private No getUltimaMemoria() { return memoria.get(getUltimoPasso()); }
-    
+   
+    private void atualizaBecos(No novoBeco) { this.semSaida.add(novoBeco); }
     public No getPosicao() { return posicao; }
     public void setPosicao(No posicao) { this.posicao = posicao; }
     public List<No> getMemoria() { return memoria; }

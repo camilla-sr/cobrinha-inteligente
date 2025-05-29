@@ -1,18 +1,15 @@
 package pacote;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException{
         boolean escapou = false;
-//        Grafo g = new Grafo(10);
-//        Player cobrinha = new Player(g.getInicio());
-//        g.diagrama(cobrinha);
 
         while (!escapou) {
+            System.out.println("\n\t\t\t\t\t\t\t\t\tGerando novo tabuleiro");
             Grafo labirinto = new Grafo(10);
             Player cobrinha = new Player(labirinto.getInicio());
             No fim = labirinto.getFim();
-
-            System.out.println("Novo labirinto gerado:");
+            
             labirinto.diagrama(cobrinha);
 
             boolean encontrou = false;
@@ -22,7 +19,6 @@ public class Main {
 
                 if (!cobrinha.andar(labirinto.getTabuleiro())) {
                     if (!cobrinha.voltar()) {
-                        System.out.println("Gerando novo tabuleiro...\n");
                         break;
                     }
                 }
@@ -30,7 +26,7 @@ public class Main {
             }
 
             if (cobrinha.getPosicao().equals(fim)) {
-                System.out.println("Escapou!");
+                System.out.println("\n\t\t\t\t\t\t\t\t\tEscapou!");
                 System.out.println("Caminho percorrido:");
                 for (No passo : cobrinha.getMemoria()) {
                     System.out.println("(" + passo.getLinha() + ", " + passo.getColuna() + ")");
