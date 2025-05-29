@@ -3,8 +3,8 @@ package pacote;
 public class Main {
     public static void main(String[] args) throws InterruptedException{
         boolean escapou = false;
-        int grafosGerados = 0;
-
+        int grafosGerados = 0;      //essa varivael nos permite acompanhar quantas vezes
+                                    // a cobrinha precisou gerar um novo tabuleiro para chegar ate  o final dela
         while (!escapou) {
             System.out.print("\tGerando novo tabuleiro\n");
             Grafo labirinto = new Grafo(10);

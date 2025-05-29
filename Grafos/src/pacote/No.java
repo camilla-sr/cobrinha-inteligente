@@ -6,8 +6,8 @@ import java.util.List;
 public class No {       //classe para gerenciar as `casas` do tabuleiro
     private int linha, coluna;
     private char valor;
-    private List<No> caminhos;
-    private List<No> paredes;
+    private List<No> caminhos;  //armazenamos separadamente tudo que e um caminho valido
+    private List<No> paredes;   // de uma parede. Isso cria tipos diferentes de nos
     
     public No(int linha, int coluna, char valor) {
         this.linha = linha;

@@ -21,6 +21,11 @@ public class Player {
         atualizarMemoriaGeral(posicao);      //inclui a posicao inicial na memoria
     }
     
+    // esse metodo unifica todo processo de andar, tentando para todos os lados
+    // cada posicao possui uma quantidade de movimentos possiveis nas direcoes que vai ate 4
+    // semSaida vai armazenar todos os campos em que esse numero de tentativas chegou a null, ou seja, terminou
+    // isso vai evitar loops infinitos de caminhos ineficientes e tambem permitir que o robo volte os passos
+    // e tente direcoes diferentes das que ja tentou em uma determinada posicao
     public boolean andar(No[][] tabuleiro){
         if(!memoriaTentativas.containsKey(this.posicao)) { iniciaTentativas(posicao); }
         

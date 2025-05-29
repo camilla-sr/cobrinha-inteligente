@@ -31,20 +31,22 @@ public class Grafo {        //esse e o nosso labirinto
     public void iniciarNos(int tamanho) {
         Random ran = new Random();
 
-        // Inicializa toda matriz com parede por padrão
+        //Inicializa todas as posicoes como paredes
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
-                tabuleiro[i][j] = new No(i, j, '1');  // tudo parede inicialmente
+                tabuleiro[i][j] = new No(i, j, '1');
             }
         }
 
-        // Cria o caminho garantido
+        // aqui a gente garante que haja pelo menos um caminho totalmente
+        // valido do comeco do tabuleiro 'E' ate o final 'C'
         int i = 0;
         int j = 0;
-        tabuleiro[i][j].setValor('E');  // Entrada
+        tabuleiro[i][j].setValor('E');  // defino o inicio da matriz, esta e a entrada
 
         while (i != tamanho - 1 || j != tamanho - 1) {
-            // Decide aleatoriamente se vai descer ou ir para a direita
+            // deixo o algoritmo decidir aleatoriamente o caminho percorrido
+            // ate a saida do labirinto, o que vai criar o caminho valido
             if (i == tamanho - 1) {
                 j++;
             } else if (j == tamanho - 1) {
@@ -54,24 +56,26 @@ public class Grafo {        //esse e o nosso labirinto
             } else {
                 j++;
             }
-            tabuleiro[i][j].setValor('0');  // Marca como caminho
+            tabuleiro[i][j].setValor('0');  // seto o valor das posicoes que serao o caminnho como 0
         }
-        tabuleiro[tamanho - 1][tamanho - 1].setValor('C');  // Saída
+        
+        tabuleiro[tamanho - 1][tamanho - 1].setValor('C');  // seto a saida do labirinto
 
-        // Agora, preenche aleatoriamente o resto das células não usadas no caminho
+        // No restante da matriz que nao envolveu o caminho, preenncho aleatoriamente
         for (int x = 0; x < tamanho; x++) {
             for (int y = 0; y < tamanho; y++) {
                 No no = tabuleiro[x][y];
+                
+                //nesse if eu garannto que o caminho valido, a entrada e saida nao serao alterados
                 if (no.getValor() != '0' && no.getValor() != 'E' && no.getValor() != 'C') {
                     char valor = ran.nextBoolean() ? '1' : '0';
-                    no.setValor(valor);
+                    no.setValor(valor);     //seto os valores dos nos
                 }
             }
         }
-
-        this.inicio = tabuleiro[0][0];
-        this.fim = tabuleiro[tamanho - 1][tamanho - 1];
-        conecarParedes(tamanho);
+        this.inicio = tabuleiro[0][0];      //crio uma referencia para o inicio
+        this.fim = tabuleiro[tamanho - 1][tamanho - 1];     //e uma para o final
+        conecarParedes(tamanho);        //crio as arestas entre as paredes
     }
 
     public void conecarParedes(int tamanho) {
@@ -110,6 +114,9 @@ public class Grafo {        //esse e o nosso labirinto
         }
     }
 
+    // com esse metodo, eu garanto que a cobrinha nao 'passe por cima' das paredes direto para uma posicao
+    // valida. Como ela so pode andar para os lados que esta 'enxergando', ou seja, os nos adjacentes a posicao que esta,
+    // aqui crio as arestas entre tudo que e considerado 'caminho' para permitir esse tipo de movimentacao
     public void conecarCaminhos(int tamanho) {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
@@ -146,7 +153,8 @@ public class Grafo {        //esse e o nosso labirinto
         }
     }
 
-    public void diagrama(Player cobrinha) {         //esse metodo vai tentar criar um diagrama com as ligacoes
+    //esse metodo vai criar um diagrama com as ligacoes que sera nosso tabuleiro+
+    public void diagrama(Player cobrinha) {
         System.out.println("===============================================");
         for (int i = 0; i < tabuleiro.length; i++) {
             //aqui vao ter as ligacoes horizontais
@@ -190,6 +198,7 @@ public class Grafo {        //esse e o nosso labirinto
         System.out.println("===============================================");
     }
 
+    //esse metodo e puramente para debug, de forma a observar se a matriz esta sendo gerada corretamente
     public void imprimirLabirinto() {
         System.out.println(" -------------------------------");
         for (int i = 0; i < tabuleiro.length; i++) {
@@ -202,15 +211,8 @@ public class Grafo {        //esse e o nosso labirinto
         System.out.println(" -------------------------------");
     }
 
-    public No[][] getTabuleiro() {
-        return tabuleiro;
-    }
-
-    public No getInicio() {
-        return inicio;
-    }
-
-    public No getFim() {
-        return fim;
-    }
+    //puramente por nnao ter  necessidade de usar setters, eles nao foram criados
+    public No[][] getTabuleiro() { return tabuleiro; }
+    public No getInicio() { return inicio; }
+    public No getFim() { return fim; }
 }
