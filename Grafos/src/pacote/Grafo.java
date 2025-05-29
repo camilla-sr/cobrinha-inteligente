@@ -7,115 +7,180 @@ public class Grafo {        //esse e o nosso labirinto
     private No inicio;
     private No fim;
 
-    public Grafo(int tamanho){
+    public Grafo(int tamanho) {
         this.tabuleiro = new No[tamanho][tamanho];
         iniciarNos(tamanho);
     }
+
+//    public void iniciarNos(int tamanho){
+//        Random ran = new Random();    
+//        for (int i = 0; i < tamanho; i++) {
+//            for (int j = 0; j < tamanho; j++) {
+//                char valor = ran.nextBoolean() ? '1' : '0';    //preenche aleatoriamente com 1 ou 0
+//                tabuleiro[i][j] = new No(i,j,valor);    //cria o no com o valor aleatorio e a posicao dele
+//            }
+//        }
+//        tabuleiro[0][0].setValor('E');        //isso forca a entrada livre do labirinto
+//        tabuleiro[tamanho-1][tamanho-1].setValor('C');    //e isso forca a saida livre
+//        
+//        this.inicio = tabuleiro[0][0];
+//        this.fim = tabuleiro[tamanho-1][tamanho-1];
+//        conecarParedes(tamanho);
+//    }
     
-    public void iniciarNos(int tamanho){
-        Random ran = new Random();    
+    public void iniciarNos(int tamanho) {
+        Random ran = new Random();
+
+        // Inicializa toda matriz com parede por padrão
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
-                char valor = ran.nextBoolean() ? '1' : '0';    //preenche aleatoriamente com 1 ou 0
-                tabuleiro[i][j] = new No(i,j,valor);    //cria o no com o valor aleatorio e a posicao dele
+                tabuleiro[i][j] = new No(i, j, '1');  // tudo parede inicialmente
             }
         }
-        tabuleiro[0][0].setValor('E');        //isso forca a entrada livre do labirinto
-        tabuleiro[tamanho-1][tamanho-1].setValor('C');    //e isso forca a saida livre
-        
+
+        // Cria o caminho garantido
+        int i = 0;
+        int j = 0;
+        tabuleiro[i][j].setValor('E');  // Entrada
+
+        while (i != tamanho - 1 || j != tamanho - 1) {
+            // Decide aleatoriamente se vai descer ou ir para a direita
+            if (i == tamanho - 1) {
+                j++;
+            } else if (j == tamanho - 1) {
+                i++;
+            } else if (ran.nextBoolean()) {
+                i++;
+            } else {
+                j++;
+            }
+            tabuleiro[i][j].setValor('0');  // Marca como caminho
+        }
+        tabuleiro[tamanho - 1][tamanho - 1].setValor('C');  // Saída
+
+        // Agora, preenche aleatoriamente o resto das células não usadas no caminho
+        for (int x = 0; x < tamanho; x++) {
+            for (int y = 0; y < tamanho; y++) {
+                No no = tabuleiro[x][y];
+                if (no.getValor() != '0' && no.getValor() != 'E' && no.getValor() != 'C') {
+                    char valor = ran.nextBoolean() ? '1' : '0';
+                    no.setValor(valor);
+                }
+            }
+        }
+
         this.inicio = tabuleiro[0][0];
-        this.fim = tabuleiro[tamanho-1][tamanho-1];
+        this.fim = tabuleiro[tamanho - 1][tamanho - 1];
         conecarParedes(tamanho);
     }
-    
-    public void conecarParedes(int tamanho){
+
+    public void conecarParedes(int tamanho) {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 No noAtual = tabuleiro[i][j];
-                if(noAtual.isCaminho()) continue;      //ignorar os caminhos validos que serao os 0, E, C
-                
-                if(i > 0){      //isso evita estouro da matriz
-                    No noCima = tabuleiro[i-1][j];      //armazeno o tal no em variavel semantica
+                if (noAtual.isCaminho()) {
+                    continue;      //ignorar os caminhos validos que serao os 0, E, C
+                }
+                if (i > 0) {      //isso evita estouro da matriz
+                    No noCima = tabuleiro[i - 1][j];      //armazeno o tal no em variavel semantica
                     //SE o no de cima ao atual nao for uma parede
-                    if(noCima.isParede()) noAtual.addParede(noCima); //crio uma aresta entre eles
+                    if (noCima.isParede()) {
+                        noAtual.addParede(noCima); //crio uma aresta entre eles
+                    }
                 }
-                if(i < tamanho-1){
-                    No noBaixo = tabuleiro[i+1][j];
-                    if(noBaixo.isParede()) noAtual.addParede(noBaixo);
+                if (i < tamanho - 1) {
+                    No noBaixo = tabuleiro[i + 1][j];
+                    if (noBaixo.isParede()) {
+                        noAtual.addParede(noBaixo);
+                    }
                 }
-                if(j > 0){
-                    No noEsquerda = tabuleiro[i][j-1];
-                    if(noEsquerda.isParede()) noAtual.addParede(noEsquerda);
+                if (j > 0) {
+                    No noEsquerda = tabuleiro[i][j - 1];
+                    if (noEsquerda.isParede()) {
+                        noAtual.addParede(noEsquerda);
+                    }
                 }
-                if(j < tamanho-1){
-                    No noDireita = tabuleiro[i][j+1];
-                    if(noDireita.isParede()) noAtual.addParede(noDireita);
-                }
-            }
-        }
-    }
-    public void conecarCaminhos(int tamanho){
-        for (int i = 0; i < tamanho; i++) {
-            for (int j = 0; j < tamanho; j++) {
-                No noAtual = tabuleiro[i][j];
-                if(noAtual.isParede()) continue;      //ignorar as paredes que serao os 1
-                
-                if(i > 0){      //isso evita estouro da matriz
-                    No noCima = tabuleiro[i-1][j];      //armazeno o tal no em variavel semantica
-                    //SE o no de cima ao atual nao for uma parede
-                    if(noCima.isCaminho()) noAtual.addCaminho(noCima); //crio uma aresta entre eles
-                }
-                if(i < tamanho-1){
-                    No noBaixo = tabuleiro[i+1][j];
-                    if(noBaixo.isCaminho()) noAtual.addCaminho(noBaixo);
-                }
-                if(j > 0){
-                    No noEsquerda = tabuleiro[i][j-1];
-                    if(noEsquerda.isCaminho()) noAtual.addCaminho(noEsquerda);
-                }
-                if(j < tamanho-1){
-                    No noDireita = tabuleiro[i][j+1];
-                    if(noDireita.isCaminho()) noAtual.addCaminho(noDireita);
+                if (j < tamanho - 1) {
+                    No noDireita = tabuleiro[i][j + 1];
+                    if (noDireita.isParede()) {
+                        noAtual.addParede(noDireita);
+                    }
                 }
             }
         }
     }
 
-    public void diagrama(Player cobrinha){         //esse metodo vai tentar criar um diagrama com as ligacoes
+    public void conecarCaminhos(int tamanho) {
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                No noAtual = tabuleiro[i][j];
+                if (noAtual.isParede()) {
+                    continue;      //ignorar as paredes que serao os 1
+                }
+                if (i > 0) {      //isso evita estouro da matriz
+                    No noCima = tabuleiro[i - 1][j];      //armazeno o tal no em variavel semantica
+                    //SE o no de cima ao atual nao for uma parede
+                    if (noCima.isCaminho()) {
+                        noAtual.addCaminho(noCima); //crio uma aresta entre eles
+                    }
+                }
+                if (i < tamanho - 1) {
+                    No noBaixo = tabuleiro[i + 1][j];
+                    if (noBaixo.isCaminho()) {
+                        noAtual.addCaminho(noBaixo);
+                    }
+                }
+                if (j > 0) {
+                    No noEsquerda = tabuleiro[i][j - 1];
+                    if (noEsquerda.isCaminho()) {
+                        noAtual.addCaminho(noEsquerda);
+                    }
+                }
+                if (j < tamanho - 1) {
+                    No noDireita = tabuleiro[i][j + 1];
+                    if (noDireita.isCaminho()) {
+                        noAtual.addCaminho(noDireita);
+                    }
+                }
+            }
+        }
+    }
+
+    public void diagrama(Player cobrinha) {         //esse metodo vai tentar criar um diagrama com as ligacoes
         System.out.println("===============================================");
         for (int i = 0; i < tabuleiro.length; i++) {
             //aqui vao ter as ligacoes horizontais
             for (int j = 0; j < tabuleiro[i].length; j++) {
                 No v = tabuleiro[i][j];
-                
+
                 if (cobrinha.getPosicao() == v) {
-                    System.out.print("<><>");
-                }else{
+                    System.out.print("<>");
+                } else {
                     System.out.print(v.getValor());     //isso vai trazer o valor que esta no no
                 }
-                
-                if(j < tabuleiro[i].length - 1){    //verifica se tem um vizinho a direita
-                    No vDireita = tabuleiro[i][j+1];
-                    
-                    if(v.getParede().contains(vDireita)){
+
+                if (j < tabuleiro[i].length - 1) {    //verifica se tem um vizinho a direita
+                    No vDireita = tabuleiro[i][j + 1];
+
+                    if (v.getParede().contains(vDireita)) {
                         System.out.print("----");
-                    }else{
+                    } else {
                         System.out.print("    ");
                     }
                 }
             }
             System.out.println();
-            
+
             //aqui vao ter as ligacoes verticais
             for (int j = 0; j < tabuleiro[i].length; j++) {
                 No v = tabuleiro[i][j];
-                
-                if(i < tabuleiro.length - 1){
-                    No vBaixo = tabuleiro[i+1][j];
-                    
-                    if(v.getParede().contains(vBaixo)){
+
+                if (i < tabuleiro.length - 1) {
+                    No vBaixo = tabuleiro[i + 1][j];
+
+                    if (v.getParede().contains(vBaixo)) {
                         System.out.print("|    ");
-                    }else{
+                    } else {
                         System.out.print("     ");
                     }
                 }
@@ -124,11 +189,11 @@ public class Grafo {        //esse e o nosso labirinto
         }
         System.out.println("===============================================");
     }
-    
-    public void imprimirLabirinto(){
+
+    public void imprimirLabirinto() {
         System.out.println(" -------------------------------");
         for (int i = 0; i < tabuleiro.length; i++) {
-        System.out.print("| ");
+            System.out.print("| ");
             for (int j = 0; j < tabuleiro[i].length; j++) {
                 System.out.print(tabuleiro[i][j].getValor() + "  ");
             }
@@ -137,7 +202,15 @@ public class Grafo {        //esse e o nosso labirinto
         System.out.println(" -------------------------------");
     }
 
-    public No[][] getTabuleiro() { return tabuleiro; }
-    public No getInicio() { return inicio; }
-    public No getFim() { return fim; }
+    public No[][] getTabuleiro() {
+        return tabuleiro;
+    }
+
+    public No getInicio() {
+        return inicio;
+    }
+
+    public No getFim() {
+        return fim;
+    }
 }

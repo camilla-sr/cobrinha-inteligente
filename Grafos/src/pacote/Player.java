@@ -39,13 +39,14 @@ public class Player {
                 direcao = proximaTentativa(posicao);
             }
         }
-        atualizaBecos(this.posicao);
+        atualizaBecos(posicao);
         return false;
     }
     
     public boolean voltar(){
-        if(memoria.size() > 0 && !semSaida.contains(posicao)){
-            memoria.remove(getUltimoPasso());
+        if(memoria.size() > 1){
+            atualizaBecos(posicao);
+            memoria.remove(memoria.size() - 1);
             posicao = getUltimaMemoria();
             return true;
         }
@@ -58,7 +59,7 @@ public class Player {
         
         if(linha > 0){
             No proximoPasso = tabuleiro[linha-1][coluna];   //guarda o proximo passo para cima
-            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso)){    //se esse caminho nao e uma parede e ainda nao foi percorrido
+            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso) && !semSaida.contains(proximoPasso)){    //se esse caminho nao e uma parede e ainda nao foi percorrido
                 posicao = proximoPasso;     //atualiza a posicao atual
                 atualizarMemoriaGeral(proximoPasso);  //adiciona o novo passo na memoria
                 return true;    //retorna que a cobra andou
@@ -73,7 +74,7 @@ public class Player {
         
         if(linha < tabuleiro.length - 1){
             No proximoPasso = tabuleiro[linha+1][coluna];
-            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso)){
+            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso) && !semSaida.contains(proximoPasso)){
                 posicao = proximoPasso;
                 atualizarMemoriaGeral(proximoPasso);
                 return true;    //retorna que a cobra andou
@@ -88,7 +89,7 @@ public class Player {
         
         if(coluna > 0){
             No proximoPasso = tabuleiro[linha][coluna-1];
-            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso)){
+            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso) && !semSaida.contains(proximoPasso)){
                 posicao = proximoPasso;
                 atualizarMemoriaGeral(proximoPasso);
                 return true;    //retorna que a cobra andou
@@ -103,7 +104,7 @@ public class Player {
         
         if(coluna < tabuleiro[0].length-1){
             No proximoPasso = tabuleiro[linha][coluna+1];
-            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso)){
+            if(proximoPasso.isCaminho() && !memoria.contains(proximoPasso) && !semSaida.contains(proximoPasso)){
                 posicao = proximoPasso;
                 atualizarMemoriaGeral(proximoPasso);
                 return true;    //retorna que a cobra andou
