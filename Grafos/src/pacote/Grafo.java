@@ -75,10 +75,10 @@ public class Grafo {        //esse e o nosso labirinto
         }
         this.inicio = tabuleiro[0][0];      //crio uma referencia para o inicio
         this.fim = tabuleiro[tamanho - 1][tamanho - 1];     //e uma para o final
-        conecarParedes(tamanho);        //crio as arestas entre as paredes
+        conectarParedes(tamanho);        //crio as arestas entre as paredes
     }
 
-    public void conecarParedes(int tamanho) {
+    public void conectarParedes(int tamanho) {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 No noAtual = tabuleiro[i][j];
@@ -117,7 +117,7 @@ public class Grafo {        //esse e o nosso labirinto
     // com esse metodo, eu garanto que a cobrinha nao 'passe por cima' das paredes direto para uma posicao
     // valida. Como ela so pode andar para os lados que esta 'enxergando', ou seja, os nos adjacentes a posicao que esta,
     // aqui crio as arestas entre tudo que e considerado 'caminho' para permitir esse tipo de movimentacao
-    public void conecarCaminhos(int tamanho) {
+    public void conectarCaminhos(int tamanho) {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 No noAtual = tabuleiro[i][j];
